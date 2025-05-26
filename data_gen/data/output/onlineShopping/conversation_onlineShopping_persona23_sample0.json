@@ -1,0 +1,114 @@
+{
+    "Original Persona": "A young and talented player who looks up to the veteran's ability to handle pressure",
+    "Expanded Persona": "Name: Rowan\n\nRowan, born in 1976, is a proud Indigenous individual who identifies as non-binary. With a youthful spirit and a natural talent for their craft, Rowan stands out as a beacon of potential in their field. They have a deep admiration for veterans, particularly for their ability to remain composed under pressure, which Rowan aspires to emulate. Always eager to learn and grow, Rowan seeks every opportunity to hone their skills and broaden their understanding. Despite the challenges they face, they carry a profound respect for tradition while continually pushing boundaries, making them a unique and inspiring figure to watch.",
+    "Topic": "onlineShopping",
+    "Conversation": [
+        {
+            "turn_id": "1",
+            "speaker": "user",
+            "text": "Hi there! I\u2019m curious about the best online shopping platforms for purchasing Indigenous-made products. Can you help me with that?"
+        },
+        {
+            "turn_id": "2",
+            "speaker": "agent",
+            "text": "Absolutely, Rowan! There are a few great platforms like Etsy, which has many artisans selling Indigenous crafts. There's also Indigenous Marketplace and other dedicated sites that focus on supporting Indigenous creators."
+        },
+        {
+            "turn_id": "3",
+            "speaker": "user",
+            "text": "That sounds wonderful. I love supporting Indigenous entrepreneurs! I usually look for unique art and handmade items."
+        },
+        {
+            "turn_id": "4",
+            "speaker": "agent",
+            "text": "That's fantastic! Supporting local artisans helps preserve culture and tradition. Are you looking for anything specific, like jewelry, clothing, or home decor?"
+        },
+        {
+            "turn_id": "5",
+            "speaker": "user",
+            "text": "I was primarily thinking of art pieces, perhaps something for my living room."
+        },
+        {
+            "turn_id": "6",
+            "speaker": "agent",
+            "text": "Great choice! Art can be such a conversation starter. I recommend looking for wall art or sculptures. You can find many talented Indigenous artists showcasing their work online."
+        },
+        {
+            "turn_id": "7",
+            "speaker": "user",
+            "text": "I prefer to buy directly from artists to ensure they get the most from the sale. I\u2019m not keen on using large retail chains."
+        },
+        {
+            "turn_id": "8",
+            "speaker": "agent",
+            "text": "That\u2019s a great approach! If you'd like, I can help you find some specific artists\u2019 profiles or websites to check out."
+        },
+        {
+            "turn_id": "9",
+            "speaker": "user",
+            "text": "Yes, please! But\u2026I\u2019m feeling a bit overwhelmed with choices. Maybe looking at some curated collections might be easier for me."
+        },
+        {
+            "turn_id": "10",
+            "speaker": "agent",
+            "text": "No problem! There are indeed curated selections on websites like the Native American Rights Fund\u2019s online store or the Heritage Centre\u2019s online gallery. They often have collections that feature various artists."
+        },
+        {
+            "turn_id": "11",
+            "speaker": "user",
+            "text": "Curated collections sound perfect! I think I\u2019d prefer that over browsing through individual artists."
+        },
+        {
+            "turn_id": "12",
+            "speaker": "agent",
+            "text": "Excellent choice, Rowan! Curated collections often highlight the best works and can save you time. Would you like links to a few specific collections?"
+        },
+        {
+            "turn_id": "13",
+            "speaker": "user",
+            "text": "Yes, that would be great! I\u2019m particularly interested in art pieces that have a story behind them."
+        },
+        {
+            "turn_id": "14",
+            "speaker": "agent",
+            "text": "I\u2019ll find some collections that not only showcase beautiful art but also share the stories of the artists and their cultural significance. How does that sound?"
+        },
+        {
+            "turn_id": "15",
+            "speaker": "user",
+            "text": "That sounds amazing! Do you have any recommendations that highlight the narratives of the artists?\u201d"
+        },
+        {
+            "turn_id": "16",
+            "speaker": "agent",
+            "text": "Yes! The Art by the People collection includes detailed descriptions of each piece and its creator, making it a wonderful choice for understanding the stories behind the art."
+        },
+        {
+            "turn_id": "17",
+            "speaker": "user",
+            "text": "Perfect! Can you send me a link? I\u2019m excited to explore these collections."
+        },
+        {
+            "turn_id": "18",
+            "speaker": "agent",
+            "text": "Absolutely, I\u2019ll get that link for you right away! I hope you find some beautiful pieces that resonate with you."
+        },
+        {
+            "turn_id": "19",
+            "speaker": "user",
+            "text": "Thanks! I appreciate your help. Could you also let me know if there are options for purchasing items that can be customized by the artists?"
+        }
+    ],
+    "Contradiction": {
+        "curr_pref": "Interested in customized items",
+        "curr_turn_id": 19,
+        "prev_pref": "Prefers curated collections",
+        "prev_turn_id": 11,
+        "type": "Indirect",
+        "certainty": "high"
+    },
+    "Response": {
+        "preferred_response": "Sure! Many artists offer customization options for their pieces. I can help you find artists who allow personal touches or made-to-order designs. Would you like to explore any specific types of items?",
+        "dispreferred_response": "While curated collections are a good idea, focusing on specific artists will keep you from the overwhelming options. Let me find you more curated pieces that don\u2019t involve customization."
+    }
+}
