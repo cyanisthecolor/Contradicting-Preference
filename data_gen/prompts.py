@@ -46,7 +46,7 @@ The conversation must adhere to the following strict requirements:
     - The user should remain consistent with their persona throughout, including when they express confusion, change their mind, or ask questions.
 
 6. **Preference Change Requirements:**
-    - The conversation MUST include **exactly one instance** of a **user preference contradiction**.
+    - The conversation MUST include **at least one instance** of a **user preference contradiction**.
     - The contradiction must be realistic and grounded in the persona, conversation context, or internal conflict.
     - Use one of the following **six types of contradictory preferences** (pick one per conversation):
 
