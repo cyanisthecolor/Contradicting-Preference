@@ -256,9 +256,11 @@ if __name__ == "__main__":
     parser.add_argument('--clean', dest='clean', action='store_true', help='Remove existing data files and start clean')
     parser.add_argument('--output_dir', type=str, default='data/output/', help='Set the path to the output directory')
     parser.add_argument('--verbose', dest='verbose', action='store_true', help='Set verbose to True')
+    parser.add_argument('--qwen', action='store_true')
     cmd_args = parser.parse_args()
 
     # Override args from config.yaml with command-line arguments if provided
+    args['qwen'] = True if cmd_args.qwen==True else False
     args['models']['llm_model'] = cmd_args.model if cmd_args.model is not None else args['models']['llm_model']
     args['datasets']['topics'] = cmd_args.topics if cmd_args.topics is not None else args['datasets']['topics']
     args['inference']['num_personas'] = cmd_args.n_persona if cmd_args.n_persona is not None else args['inference']['num_personas']
@@ -267,6 +269,7 @@ if __name__ == "__main__":
     args['inference']['start_sample_idx'] = cmd_args.s_samples if cmd_args.s_samples is not None else args['inference']['start_sample_idx']
     args['inference']['output_dir'] = cmd_args.output_dir if cmd_args.output_dir is not None else args['inference']['output_dir']
     args['inference']['verbose'] = cmd_args.verbose if cmd_args.verbose is not None else args['inference']['verbose']
+   
 
     # Start inference
     print(args)

@@ -20,7 +20,6 @@ class QueryLLM:
         # Load the API key
         with open("api_tokens/openai_key.txt", "r") as api_key_file:
             self.api_key = api_key_file.read().strip()
-
         self.client = OpenAI(api_key=self.api_key)
         self.assistant = self.client.beta.assistants.create(
             name="Conversation Generator",
@@ -178,14 +177,31 @@ class QueryLLM:
             raise ValueError(f'Invalid step: {step}')
 
         # Independent API calls every time
-        if (step == 'expand_persona' or step == 'qa_helper' or step == 'find_preference_change' or step == 'translate_code'
+        if step == 'find_preference_change_and_append_agent_answers' and self.args['qwen']:
+            print("Using QWEN to find_preference_change_and_append_agent_answers!")
+            with open("api_tokens/qwen_key.txt", "r") as api_key_file:
+                client = OpenAI(
+                    api_key=api_key_file.read().strip(),
+                    base_url="https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+                )
+                model = 'qwen-turbo'
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=[{"role": "user",
+                            "content": prompt}],
+                    max_tokens=8192
+                )
+                response = response.choices[0].message.content
+                if verbose:
+                    print(f'{utils.Colors.OKGREEN}{step.capitalize()}:{utils.Colors.ENDC} {response}')
+        elif (step == 'expand_persona' or step == 'qa_helper' or step == 'find_preference_change' or step == 'translate_code'
                 or step == 'rewrite_email' or step == 'rewrite_creative_writing' or step == 'new_content' or step == 'find_stereotype'):
             model = 'gpt-4o-mini' if step == 'find_preference_change' else self.args['models']['llm_model']
             response = self.client.chat.completions.create(
                 model=model,
                 messages=[{"role": "user",
                            "content": prompt}],
-                max_tokens=10000
+                max_tokens=8192
             )
             response = response.choices[0].message.content
             if verbose:
