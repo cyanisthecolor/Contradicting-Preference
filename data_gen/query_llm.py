@@ -177,19 +177,19 @@ class QueryLLM:
             raise ValueError(f'Invalid step: {step}')
 
         # Independent API calls every time
-        if step == 'find_preference_change_and_append_agent_answers' and self.args['qwen']:
-            print("Using QWEN to find_preference_change_and_append_agent_answers!")
-            with open("api_tokens/qwen_key.txt", "r") as api_key_file:
+        if step == 'find_preference_change_and_append_agent_answers' and self.args['gemini']:
+            print("Using Gemini to find_preference_change_and_append_agent_answers!")
+            with open("api_tokens/gemini_key.txt", "r") as api_key_file:
                 client = OpenAI(
                     api_key=api_key_file.read().strip(),
-                    base_url="https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+                    base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
                 )
-                model = 'qwen-turbo'
+                model = 'gemini-2.5-flash-preview-05-20'
                 response = client.chat.completions.create(
                     model=model,
                     messages=[{"role": "user",
                             "content": prompt}],
-                    max_tokens=8192
+                    max_tokens=10000
                 )
                 response = response.choices[0].message.content
                 if verbose:

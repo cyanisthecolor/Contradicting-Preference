@@ -256,11 +256,11 @@ if __name__ == "__main__":
     parser.add_argument('--clean', dest='clean', action='store_true', help='Remove existing data files and start clean')
     parser.add_argument('--output_dir', type=str, default='data/output/', help='Set the path to the output directory')
     parser.add_argument('--verbose', dest='verbose', action='store_true', help='Set verbose to True')
-    parser.add_argument('--qwen', action='store_true')
+    parser.add_argument('--gemini', action='store_true')
     cmd_args = parser.parse_args()
 
     # Override args from config.yaml with command-line arguments if provided
-    args['qwen'] = True if cmd_args.qwen==True else False
+    args['gemini'] = True if cmd_args.gemini==True else False
     args['models']['llm_model'] = cmd_args.model if cmd_args.model is not None else args['models']['llm_model']
     args['datasets']['topics'] = cmd_args.topics if cmd_args.topics is not None else args['datasets']['topics']
     args['inference']['num_personas'] = cmd_args.n_persona if cmd_args.n_persona is not None else args['inference']['num_personas']
