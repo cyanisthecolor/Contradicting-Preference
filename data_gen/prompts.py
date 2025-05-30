@@ -46,7 +46,7 @@ The conversation must adhere to the following strict requirements:
     - The user should remain consistent with their persona throughout, including when they express confusion, change their mind, or ask questions.
 
 6. **Preference Change Requirements:**
-    - The conversation MUST include **at least one instance** of a **user preference contradiction**.
+    - The conversation MUST include **exactly one instance** of a **user preference contradiction**.
     - The contradiction must be realistic and grounded in the persona, conversation context, or internal conflict.
     - Use one of the following **six types of contradictory preferences** (pick one per conversation):
 
@@ -111,9 +111,31 @@ Ensure the final output is a **valid Python list of dictionaries**, ends with a 
 def prompts_for_finding_preference_change_and_gen_agent_answers(data):
     prompt = f"""
     Read the following conversation, it consists of multiple turns, each turn is represented as turn_id, speaker, text.
-    In this conversation, there is exactly one instance where the user's preference changes between two different user turns. This change could be:
-    - "Direct": a direct contradiction to a preference the user expressed in an earlier turn.
-    - "Indirect": the preference evolves perhaps due to new information, or the preference changes because of a situational context.
+    In this conversation, there is **exactly one instance** where the user's preference changes between two different user turns. This change could be among the 🧠 **Categories of Contradictory Preferences**:
+        
+        1. **Contextual Contradiction:**  
+           A preference changes due to situational factors.  
+           Example: "I like sweets." → "I don’t like sweets today, I’m sick."
+        
+        2. **Trade-off Contradiction:**  
+           Two incompatible preferences emerge.  
+           Example: "I want short answers." → "You didn’t give enough detail."
+        
+        3. **Topic-Specific Contradiction:**  
+           Preference varies across tasks/domains.  
+           Example: "Keep answers short." → "Give more details" (on emotional support).
+        
+        4. **Temporal Contradiction:**  
+           A long-term shift in opinion.  
+           Example: "I used to like horror." → "Now I find it too stressful."
+        
+        5. **Ambiguous Intent:**  
+           Conflicting signals in user language.  
+           Example: "I kinda like fast replies" → "Take your time though."
+        
+        6. **Meta-Preference:**  
+           A rule about how preferences should be handled.  
+           Example: "Keep it brief unless I ask for details."
     The user's final turns in the conversation will be relevant to this preference change.
 
     You have two tasks:
@@ -131,8 +153,7 @@ def prompts_for_finding_preference_change_and_gen_agent_answers(data):
             "curr_turn_id": "The integer turn_id of the user's utterance where the new preference is expressed.",
             "prev_pref": "A concise summary (3-7 words) of the user's original preference that contrasts with the current one.",
             "prev_turn_id": "The integer turn_id of the user's utterance where the original preference was expressed.",
-            "type": "A string, either 'Direct' OR 'Indirect',
-            "certainty": "A string indicating your confidence in this identification: 'high', 'medium', or 'low'."
+            "type": "One of: contextual, trade-off, topic-specific, temporal, ambiguous, meta-preference"
         }}
 
         **Example of the preference change dictionary structure (use actual data from the conversation):**
@@ -142,8 +163,7 @@ def prompts_for_finding_preference_change_and_gen_agent_answers(data):
             "curr_turn_id": 2,
             "prev_pref": "Wants a quiet laptop",
             "prev_turn_id": 0,
-            "type": "Indirect",
-            "certainty": "high"
+            "type": "contextual"
         }}
         ```
         (Note: ensure `curr_turn_id` and `prev_turn_id` should be integers from the conversation. And ensure curr_turn_id is NOT the last turn of the conversation)
