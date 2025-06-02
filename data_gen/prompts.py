@@ -137,8 +137,35 @@ def prompts_for_finding_preference_change_and_gen_agent_answers(data):
            A rule about how preferences should be handled.  
            Example: "Keep it brief unless I ask for details."
     The user's final turns in the conversation will be relevant to this preference change.
-
+    
     You have two tasks:
+    **Before you begin Task 1, think through and explain your **reasoning** in detail, following these steps:**
+    
+    1. **List every user turn that contains any statement of preference or request.**  
+       - For each user turn, quote the exact phrase that signals a preference.  
+       - Label it as a candidate (e.g., “Turn 3: ‘I prefer X…’”).  
+
+    2. **Determine which two candidate turns are in conflict.**  
+       - Compare each pair of candidate turns chronologically.  
+       - For each pair, ask yourself: “Do these two utterances express opposing or incompatible preferences?”  
+       - If yes, note both turn IDs and the exact quoted text.  
+
+    3. **Decide which one is the earlier (original) preference and which one is the later (changed) preference.**  
+       - The earlier one will become `prev_pref` and `prev_turn_id`; the later one is `curr_pref` and `curr_turn_id`.  
+       - Make sure they come from different user turns (not the same turn).  
+       - Confirm that the later turn is not the last turn of the overall conversation.
+
+    4. **Classify the type of contradiction.**  
+       - Look at the two quoted phrases again.  
+       - Check each of the six categories (contextual, trade-off, topic-specific, temporal, ambiguous, meta-preference).  
+       - Explain in one or two sentences why your pair fits exactly one category.  
+
+    5. **Summarize your reasoning as you go.**  
+       - For example:  
+         - “I looked at Turn 2 and saw ‘I want short answers.’ Then in Turn 5 the user said ‘Give me more detail,’ so these two conflict because one asks for brevity and the other asks for detail. That matches a trade-off contradiction.”  
+       - Make sure to explicitly reference turn IDs and quoted text when justifying each step.
+
+    After you have walked through these internal steps, produce the output for Task 1.
 
     **Task 1: Identify and Describe the Preference Change**
 
@@ -167,6 +194,35 @@ def prompts_for_finding_preference_change_and_gen_agent_answers(data):
         }}
         ```
         (Note: ensure `curr_turn_id` and `prev_turn_id` should be integers from the conversation. And ensure curr_turn_id is NOT the last turn of the conversation)
+
+    **Before you begin Task 2, think through and explain your **reasoning** in detail, following these steps:**
+
+    1. **Review the identified preference change.**  
+       - Restate in one sentence what the new preference is and why it differs from the original.  
+       - For example: “The user originally asked for short answers; later they requested more detail.”
+
+    2. **Define what a “preferred_response” must do.**  
+       - Ask yourself: “How should the agent acknowledge the new preference explicitly?”  
+       - Determine which elements the response must include to show it has understood the change (e.g., referencing both the old and new preference, adjusting tone, offering options aligned with the new preference).  
+       - Outline in bullet points the key components of a correct adaptation (e.g., “Acknowledge user’s need for more detail,” “Explain how the answer will now be longer and more thorough,” “Ask a follow-up question consistent with detailed content”).
+
+    3. **Define what a “dispreferred_response” must do.**  
+       - Ask yourself: “What mistakes would demonstrate a failure to understand or acknowledge the user’s new preference?”  
+       - List in bullet points the types of errors or omissions to include (e.g., “Continuing to offer brief answers,” “Ignoring the request for more detail,” “Expressing confusion or asking for clarification about something that has already changed”).
+
+    4. **Sketch out a short outline for each response.**  
+       - For the preferred response: note how you will open, what content you will include, and how you will close.  
+       - For the dispreferred response: note which incorrect assumption you will make, how you will phrase it, and how it highlights misunderstanding.
+
+    5. **Write your detailed reasoning step by step.**  
+       - For example:  
+         - “Step 1: I see that the new preference is for detailed explanations.  
+            Step 2: A preferred response should begin by explicitly acknowledging the shift, e.g., ‘Okay, I see you now want more depth…’  
+            Step 3: It should then provide a more elaborate explanation.  
+            Step 4: A dispreferred response might continue offering a short summary, ignoring the user’s change.”  
+       - Be explicit about how each bullet point from steps 2 and 3 will be implemented in actual sentences.
+
+    After you complete this reasoning, produce the output for Task 2.
 
     **Task 2: Generate Agent Responses**
 
