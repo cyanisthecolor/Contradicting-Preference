@@ -70,7 +70,7 @@ def prepare_topics(idx_topic, all_topics, curr_topic, args):
     return source_dir, all_source_files
 
 
-def parse_conversation_sections(LLM, input_conversation, topic, verbose):
+def parse_conversation_sections(LLM, input_conversation, topic, verbose, do_re=True):
     """
     :param input_conversation: A list of strings representing the conversation
     We define each section in the conversation as a group of lines before the next Side_Note
@@ -100,19 +100,19 @@ def parse_conversation_sections(LLM, input_conversation, topic, verbose):
             print('Contradiction', contra, '\n\n')
             print('Two Responses', resp, '\n\n')
         return contra, resp
+    if do_re:
+        match = re.search(r'```(?:python|plaintext)?\s*(.*?)\s*```', input_conversation, re.DOTALL)
+        input_conversation = match.group(1) if match else input_conversation
+        input_conversation = input_conversation.strip().replace('\n', '')
+        if '=' in input_conversation:
+            input_conversation = re.sub(r'^\s*\w+\s*=\s*', '', input_conversation, count=1).strip()
+        if input_conversation[-1] != ']':
+            input_conversation += ']'
+        if verbose:
+            print('parsed input_conversation', input_conversation, '\n\n')
 
-    match = re.search(r'```(?:python|plaintext)?\s*(.*?)\s*```', input_conversation, re.DOTALL)
-    input_conversation = match.group(1) if match else input_conversation
-    input_conversation = input_conversation.strip().replace('\n', '')
-    if '=' in input_conversation:
-        input_conversation = re.sub(r'^\s*\w+\s*=\s*', '', input_conversation, count=1).strip()
-    if input_conversation[-1] != ']':
-        input_conversation += ']'
-    if verbose:
-        print('parsed input_conversation', input_conversation, '\n\n')
-
-    input_conversation = repair_json(input_conversation)
-    input_conversation = json.loads(input_conversation)
+        input_conversation = repair_json(input_conversation)
+        input_conversation = json.loads(input_conversation)
 
     contra, resp = find_contradiction_and_gen_response(LLM, input_conversation)
 
@@ -140,6 +140,13 @@ def prepare_data_on_other_topics(LLM, expanded_persona, source_data, source_dir,
         utils.append_json_to_file(response, output_file_path, curr_data_name="Response", parse_json=False, parse_list=False)
 
 
+def annotate_conversation_from_existing_data(LLM, curr_topic, output_file_path, response):
+    conversation, pref_change, response = parse_conversation_sections(LLM, response, curr_topic, verbose=args['inference']['verbose'], do_re=False)
+    utils.append_json_to_file(conversation, output_file_path, curr_data_name="Conversation", parse_json=False, parse_list=False)
+    utils.append_json_to_file(pref_change, output_file_path, curr_data_name="Contradiction", parse_json=False, parse_list=False)
+    utils.append_json_to_file(response, output_file_path, curr_data_name="Response", parse_json=False, parse_list=False)
+
+
 def prepare_data(args):
     # Load all personas
     with open(args['datasets']['persona_file'], 'r') as file:
@@ -150,8 +157,9 @@ def prepare_data(args):
 
     for idx_persona in tqdm(range(int(args['inference']['start_persona_idx']), int(args['inference']['num_personas']))):
         LLM = QueryLLM(args)
-        persona, expanded_persona, _, _, _, \
-            _, _ = prepare_persona(LLM, idx_persona, all_personas, args)
+        if not args['use_existing_conversation']:
+            persona, expanded_persona, _, _, _, \
+                _, _ = prepare_persona(LLM, idx_persona, all_personas, args)
 
         # Clean up the names of topics
         if args['datasets']['topics'] == ['all']:
@@ -180,13 +188,29 @@ def prepare_data(args):
             for idx_sample in range(int(args['inference']['start_sample_idx']), int(args['inference']['num_samples_per_topic'])):
                 LLM = QueryLLM(args)
 
-                output_file_path = os.path.join(args['inference']['output_dir'],
+                output_file_path = os.path.join("data/output_with_reasoning" if args['use_existing_conversation'] else args['inference']['output_dir'],
                                                 os.path.join(f'{curr_topic}', f'{args["inference"]["output_file_name"]}_{curr_topic}_persona{idx_persona}_sample{idx_sample}.json'))
-                utils.append_json_to_file(persona, output_file_path, curr_data_name='Original Persona', parse_json=False)
-                utils.append_json_to_file(expanded_persona, output_file_path, curr_data_name='Expanded Persona', parse_json=False)
-                utils.append_json_to_file(curr_topic, output_file_path, curr_data_name='Topic', parse_json=False)
-                print(f'{utils.Colors.OKGREEN}Output file path: {output_file_path}{utils.Colors.ENDC}')
-
+                if not args['use_existing_conversation']:
+                    utils.append_json_to_file(persona, output_file_path, curr_data_name='Original Persona', parse_json=False)
+                    utils.append_json_to_file(expanded_persona, output_file_path, curr_data_name='Expanded Persona', parse_json=False)
+                    utils.append_json_to_file(curr_topic, output_file_path, curr_data_name='Topic', parse_json=False)
+                    print(f'{utils.Colors.OKGREEN}Output file path: {output_file_path}{utils.Colors.ENDC}')
+                else:
+                    orig_file_path = os.path.join('data/output',
+                                                os.path.join(f'{curr_topic}', f'{args["inference"]["output_file_name"]}_{curr_topic}_persona{idx_persona}_sample{idx_sample}.json'))
+                    if not os.path.exists(orig_file_path):
+                        print(f"{orig_file_path} was not there possibly due to data corruption, continuing to the next...")
+                        continue
+                    with open(orig_file_path, 'r') as f:
+                        orig_conversation = json.load(f)
+                    persona = orig_conversation['Original Persona']
+                    expanded_persona = orig_conversation['Expanded Persona']
+                    conversation=orig_conversation['Conversation']
+                    utils.append_json_to_file(persona, output_file_path, curr_data_name='Original Persona', parse_json=False, parse=False)
+                    utils.append_json_to_file(expanded_persona, output_file_path, curr_data_name='Expanded Persona', parse_json=False, parse=False)
+                    utils.append_json_to_file(orig_conversation['Topic'], output_file_path, curr_data_name='Topic', parse_json=False, parse=False)
+                    print(f'{utils.Colors.OKGREEN}Output file path: {output_file_path}{utils.Colors.ENDC}')
+                
                 # Load a random source data to the LLM as a background memory about the topic
                 source_data = utils.load_one_source_data(source_dir, all_source_files, curr_topic) if all_source_files is not None else None
                 try:
@@ -199,16 +223,24 @@ def prepare_data(args):
                         # prepare_data_on_writing_topic(LLM, curr_topic, persona, source_data, output_file_path, args)
                         # LLM.delete_a_thread(step='writing')
                     else:
-                        LLM.create_a_thread(step='conversation')
-                        prepare_data_on_other_topics(
-                            LLM=LLM, 
-                            expanded_persona=expanded_persona, 
-                            source_data=source_data, 
-                            source_dir=source_dir, 
-                            curr_topic=curr_topic, 
-                            idx_topic=idx_topic, 
-                            output_file_path=output_file_path, 
-                            args=args)
+                        if args['use_existing_conversation']:
+                            annotate_conversation_from_existing_data(
+                                LLM=LLM,
+                                curr_topic=curr_topic,
+                                output_file_path=output_file_path,
+                                response=conversation                  
+                            )
+                        else:
+                            LLM.create_a_thread(step='conversation')
+                            prepare_data_on_other_topics(
+                                LLM=LLM, 
+                                expanded_persona=expanded_persona, 
+                                source_data=source_data, 
+                                source_dir=source_dir, 
+                                curr_topic=curr_topic, 
+                                idx_topic=idx_topic, 
+                                output_file_path=output_file_path, 
+                                args=args)
                         # LLM.delete_a_thread(step='conversation')
                 except Exception as e:
                     print(f'{utils.Colors.FAIL}Error at generating file{output_file_path}: {e}{utils.Colors.ENDC}')
@@ -257,9 +289,11 @@ if __name__ == "__main__":
     parser.add_argument('--output_dir', type=str, default='data/output/', help='Set the path to the output directory')
     parser.add_argument('--verbose', dest='verbose', action='store_true', help='Set verbose to True')
     parser.add_argument('--gemini', action='store_true')
+    parser.add_argument('--use_existing_conversation', action='store_true')
     cmd_args = parser.parse_args()
 
     # Override args from config.yaml with command-line arguments if provided
+    args['use_existing_conversation'] = True if cmd_args.use_existing_conversation==True else False
     args['gemini'] = True if cmd_args.gemini==True else False
     args['models']['llm_model'] = cmd_args.model if cmd_args.model is not None else args['models']['llm_model']
     args['datasets']['topics'] = cmd_args.topics if cmd_args.topics is not None else args['datasets']['topics']

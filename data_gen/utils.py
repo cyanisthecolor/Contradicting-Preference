@@ -159,7 +159,7 @@ def extract_json_from_response(response, parse_json=False, parse_list=False):
     return response
 
 
-def append_json_to_file(response, output_file_path, curr_data_name, parse_json=False, parse_list=False):
+def append_json_to_file(response, output_file_path, curr_data_name, parse_json=False, parse_list=False, parse=True):
     def load_existing_json(file_path):
         if os.path.exists(file_path):
             with open(file_path, "r") as json_file:
@@ -179,7 +179,10 @@ def append_json_to_file(response, output_file_path, curr_data_name, parse_json=F
     #     existing_json_file['Likes and Dislikes'] = likes_and_dislikes
 
     # Extract and append the new JSON data
-    parsed_response = extract_json_from_response(response, parse_json, parse_list)
+    if parse:
+        parsed_response = extract_json_from_response(response, parse_json, parse_list)
+    else:
+        parsed_response = response
     existing_json_file[curr_data_name] = parsed_response
 
     os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
