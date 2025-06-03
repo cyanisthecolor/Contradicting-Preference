@@ -15,10 +15,35 @@ from json_repair import repair_json
 from query_llm import QueryLLM
 import utils
 
+def get_existing_personas_from_folder(folder_path):
+    existing_personas = set()
 
-def prepare_persona(LLM, idx_persona, all_personas, args):
+    if not os.path.isdir(folder_path):
+        print(f"Error: Folder not found at '{folder_path}'")
+        return existing_personas
+
+    for filename in os.listdir(folder_path):
+        if filename.endswith(".json"):
+            file_path = os.path.join(folder_path, filename)
+            try:
+                # Open and read the JSON file
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    
+                    if "Original Persona" in data:
+                        existing_personas.add(data["Original Persona"])
+                    else:
+                        print(f"Warning: 'Original Persona' field not found in {filename}")
+            except json.JSONDecodeError:
+                print(f"Error: Could not decode JSON from {filename}")
+            except Exception as e:
+                print(f"An unexpected error occurred with file {filename}: {e}")
+                
+    return existing_personas
+
+def prepare_persona(LLM, idx_persona, all_personas, args, existing_personas):
     # Load a random persona
-    found = utils.find_existing_persona_files(idx_persona)
+    found = utils.find_existing_persona_files(idx_persona)    
     # found = False
     if found:
         # Ensure that every data file with the same idx_persona share the same persona
@@ -34,8 +59,18 @@ def prepare_persona(LLM, idx_persona, all_personas, args):
             print(expanded_persona)
     else:
         # Create a new persona for the new idx_persona
-        random_row = random.choice(all_personas)
-        persona = random_row.strip()[13:-2]  # Remove prefix '{"persona":' and suffix '"}'
+        if existing_personas is None:
+            random_row = random.choice(all_personas)
+            persona = random_row.strip()[13:-2]  # Remove prefix '{"persona":' and suffix '"}'
+        else:
+            # generate test data, make sure they are not the same as original persona
+            while True:
+                random_row = random.choice(all_personas)
+                persona = random_row.strip()[13:-2]
+                if persona not in existing_personas:
+                    break
+                else:
+                    print(f"Got the original persona: {persona}, sampling again...")
         if args['inference']['verbose']:
             print(f'{utils.Colors.OKGREEN}{"Original Persona"}:{utils.Colors.ENDC}{persona}')
 
@@ -155,11 +190,14 @@ def prepare_data(args):
     # Generate conversational data relevant to the topic and the persona
     all_errored_data_paths = {}
 
+    existing_personas = None
+    if args['test']:
+        existing_personas = get_existing_personas_from_folder("data/output/datingConsultation")
     for idx_persona in tqdm(range(int(args['inference']['start_persona_idx']), int(args['inference']['num_personas']))):
         LLM = QueryLLM(args)
         if not args['use_existing_conversation']:
             persona, expanded_persona, _, _, _, \
-                _, _ = prepare_persona(LLM, idx_persona, all_personas, args)
+                _, _ = prepare_persona(LLM, idx_persona, all_personas, args, existing_personas)
 
         # Clean up the names of topics
         if args['datasets']['topics'] == ['all']:
@@ -290,9 +328,11 @@ if __name__ == "__main__":
     parser.add_argument('--verbose', dest='verbose', action='store_true', help='Set verbose to True')
     parser.add_argument('--gemini', action='store_true')
     parser.add_argument('--use_existing_conversation', action='store_true')
+    parser.add_argument('--test', action='store_true')
     cmd_args = parser.parse_args()
 
     # Override args from config.yaml with command-line arguments if provided
+    args['test'] = True if cmd_args.test==True else False
     args['use_existing_conversation'] = True if cmd_args.use_existing_conversation==True else False
     args['gemini'] = True if cmd_args.gemini==True else False
     args['models']['llm_model'] = cmd_args.model if cmd_args.model is not None else args['models']['llm_model']
