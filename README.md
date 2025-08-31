@@ -1,11 +1,11 @@
 ---
-base_model: Qwen/Qwen1.5-1.8B
-library_name: peft
+Contradicting Preferences in Multi-turn Conversations
+Less Details, But Be Thorough: Handling contradicting user preferences in multi-turn LLM-based dialogues with synthetic data, Chain-of-Thought (CoT) reasoning, and Direct Preference Optimization (DPO).
 ---
 
-# Model Card for Model ID
+# Features
 
-<!-- Provide a quick summary of what the model is/does. -->
+<!-- This project introduces a framework for training LLMs to handle contradicting user preferences in multi-turn conversations. It generates synthetic dialogues where user intents shift or conflict, classifies these contradictions into a six-category typology, and produces paired responses: one that adapts to the updated preference and one that ignores it. Using these data, the model is fine-tuned with LoRA and Direct Preference Optimization (DPO), guided by a sigmoid-based loss to encourage alignment with the most current user intent. Evaluation focuses on preference accuracy, reward margin, and semantic similarity, demonstrating that Chain-of-Thought reasoning improves both training efficiency and response consistency compared to baseline and GPT-4o models. -->
 
 
 
@@ -13,25 +13,20 @@ library_name: peft
 
 ### Model Description
 
-<!-- Provide a longer summary of what this model is. -->
+<!This model fine-tunes Qwen1.5-1.8B to handle preference contradictions in multi-turn dialogues by leveraging synthetic datasets generated with Chain-of-Thought prompting and contradiction annotations. -->
 
 
 
-- **Developed by:** [More Information Needed]
-- **Funded by [optional]:** [More Information Needed]
-- **Shared by [optional]:** [More Information Needed]
-- **Model type:** [More Information Needed]
-- **Language(s) (NLP):** [More Information Needed]
-- **License:** [More Information Needed]
-- **Finetuned from model [optional]:** [More Information Needed]
+- **Developed by:** [cyanisthecolor, shuojiafu]
+- **Model type:** [Causal LLM fine-tuned with DPO (LoRA adapters)]
+- **Language(s) (NLP):** [English]
+- **License:** [model license depends on Qwen base model]
+- **Finetuned from model:** [Qwen1.5-1.8B]
 
-### Model Sources [optional]
+### Dataset inspiration
 
-<!-- Provide the basic links for the model. -->
-
-- **Repository:** [More Information Needed]
-- **Paper [optional]:** [More Information Needed]
-- **Demo [optional]:** [More Information Needed]
+- **Repository:** [[PersonaMem]([url](https://github.com/bowen-upenn/PersonaMem))]
+- **Paper [optional]:** [[Know Me, Respond to Me: Benchmarking LLMs for Dynamic User Profiling and Personalized Responses at Scale]([url](https://arxiv.org/abs/2504.14225))]
 
 ## Uses
 
@@ -39,31 +34,39 @@ library_name: peft
 
 ### Direct Use
 
-<!-- This section is for the model use without fine-tuning or plugging into a larger ecosystem/app. -->
+<!-- Research on preference contradictions in dialogue modeling. Fine-grained evaluation of LLM alignment methods. -->
 
-[More Information Needed]
 
-### Downstream Use [optional]
+### Downstream Use
 
-<!-- This section is for the model use when fine-tuned for a task, or when plugged into a larger ecosystem/app -->
+<!--Applications requiring robust preference tracking in multi-turn chat (e.g., assistants, recommender chatbots, counseling simulations). -->
 
-[More Information Needed]
 
 ### Out-of-Scope Use
 
-<!-- This section addresses misuse, malicious use, and uses that the model will not work well for. -->
+<!-- Sensitive, high-stakes domains (e.g., healthcare, legal) without human oversight. Real-world deployment without addressing bias, robustness, and interpretability. -->
 
 [More Information Needed]
 
 ## Bias, Risks, and Limitations
 
-<!-- This section is meant to convey both technical and sociotechnical limitations. -->
+<!-- This model is trained on synthetic contradictions, meaning:
 
-[More Information Needed]
+1. It may not capture the full complexity of real human dialogue.
+
+2. Contradictions are one per conversation in the current data, limiting coverage.
+
+3. Biases may be inherited from GPT-4o and Gemini models used in data generation. -->
+
+
 
 ### Recommendations
 
-<!-- This section is meant to convey recommendations with respect to the bias, risk, and technical limitations. -->
+<!-- Future work should:
+
+1. Incorporate human-in-the-loop evaluation.
+
+2. Extend to multiple contradictions and longer histories. -->
 
 Users (both direct and downstream) should be made aware of the risks, biases and limitations of the model. More information needed for further recommendations.
 
@@ -71,7 +74,7 @@ Users (both direct and downstream) should be made aware of the risks, biases and
 
 Use the code below to get started with the model.
 
-[More Information Needed]
+[git clone https://github.com/cyanisthecolor/Contradicting-Preference.git]
 
 ## Training Details
 
