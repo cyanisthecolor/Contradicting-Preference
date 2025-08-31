@@ -1,7 +1,7 @@
----
-Contradicting Preferences in Multi-turn Conversations
-Less Details, But Be Thorough: Handling contradicting user preferences in multi-turn LLM-based dialogues with synthetic data, Chain-of-Thought (CoT) reasoning, and Direct Preference Optimization (DPO).
----
+# Contradicting Preferences in Multi-turn Conversations  
+
+**Less Details, But Be Thorough**: Handling contradicting user preferences in multi-turn LLM-based dialogues with synthetic data, Chain-of-Thought (CoT) reasoning, and Direct Preference Optimization (DPO).
+
 
 # Features
 
