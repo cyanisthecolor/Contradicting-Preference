@@ -31,6 +31,8 @@ Less Details, But Be Thorough: Handling contradicting user preferences in multi-
 ## Uses
 
 <!-- Address questions around how the model is intended to be used, including the foreseeable users of the model and those affected by the model. -->
+[Address questions around how the model is intended to be used, including the foreseeable users of the model and those affected by the model.]
+
 
 ### Direct Use
 
