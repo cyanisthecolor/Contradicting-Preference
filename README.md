@@ -17,11 +17,11 @@
 
 
 
-- **Developed by:** [cyanisthecolor, shuojiafu]
-- **Model type:** [Causal LLM fine-tuned with DPO (LoRA adapters)]
-- **Language(s) (NLP):** [English]
-- **License:** [model license depends on Qwen base model]
-- **Finetuned from model:** [Qwen1.5-1.8B]
+- **Developed by:** cyanisthecolor, shuojiafu
+- **Model type:** reasoning LLM fine-tuned with DPO (LoRA adapters)
+- **Language(s) (NLP):** English
+- **License:** model license depends on Qwen base model
+- **Finetuned from model:** Qwen1.5-1.8B
 
 ### Dataset inspiration
 
@@ -31,8 +31,7 @@
 ## Uses
 
 <!-- Address questions around how the model is intended to be used, including the foreseeable users of the model and those affected by the model. -->
-Address questions around how the model is intended to be used, including the foreseeable users of the model and those affected by the model.
-
+We address the challenge of enabling Large Language Models (LLMs) to handle contradicting user preferences in multi-turn dialogues. We propose a methodology combining synthetic data generation, a six-category typology of preference contradictions, Chain-of-Thought (CoT) prompting, and Direct Preference Optimization (DPO) fine-tuning. Using a two-pass data pipeline, we generate annotated dialogues with conflicting preferences and paired agent responses, then fine-tune Qwen1.5-1.8B with and without CoT. Our results show that CoT-augmented DPO improves preference accuracy, reward margin, and semantic alignment, outperforming both the Qwen model fine-tuned without CoT and GPT-4o on a held-out test set. Future work will explore more complex contradiction patterns, human-in-the-loop evaluation, and adaptive CoT prompting.
 
 ### Direct Use
 
