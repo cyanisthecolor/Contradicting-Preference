@@ -87,9 +87,11 @@ Future work should:
 
 ## How to Get Started with the Model
 
-Use the code below to get started with the model.
+Use the following command to clone the repository:
 
-[git clone https://github.com/cyanisthecolor/Contradicting-Preference.git]
+```bash
+git clone https://github.com/cyanisthecolor/Contradicting-Preference.git
+
 
 ## Training Details
 
