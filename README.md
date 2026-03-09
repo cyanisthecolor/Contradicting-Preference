@@ -89,8 +89,9 @@ Future work should:
 
 Use the following command to clone the repository:
 
-```bash
+\`\`\`bash
 git clone https://github.com/cyanisthecolor/Contradicting-Preference.git
+\`\`\`
 
 
 ## Training Details
