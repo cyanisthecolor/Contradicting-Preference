@@ -23,10 +23,10 @@
 - **License:** model license depends on Qwen base model
 - **Finetuned from model:** Qwen1.5-1.8B
 
-### Dataset inspiration
+### Dataset Inspiration
 
-- **Repository:** PersonaMem(https://github.com/bowen-upenn/PersonaMem)
-- **Paper [optional]:** Know Me, Respond to Me: Benchmarking LLMs for Dynamic User Profiling and Personalized Responses at Scale(https://arxiv.org/abs/2504.14225)]
+- **Repository:** [PersonaMem](https://github.com/bowen-upenn/PersonaMem)
+- **Paper [optional]:** [Know Me, Respond to Me: Benchmarking LLMs for Dynamic User Profiling and Personalized Responses at Scale](https://arxiv.org/abs/2504.14225)
 
 ## Uses
 
