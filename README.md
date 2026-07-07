@@ -25,8 +25,8 @@
 
 ### Dataset inspiration
 
-- **Repository:** [[PersonaMem](https://github.com/bowen-upenn/PersonaMem)]
-- **Paper [optional]:** [[Know Me, Respond to Me: Benchmarking LLMs for Dynamic User Profiling and Personalized Responses at Scale](https://arxiv.org/abs/2504.14225)]
+- **Repository:** PersonaMem(https://github.com/bowen-upenn/PersonaMem)
+- **Paper [optional]:** Know Me, Respond to Me: Benchmarking LLMs for Dynamic User Profiling and Personalized Responses at Scale(https://arxiv.org/abs/2504.14225)]
 
 ## Uses
 
@@ -111,7 +111,9 @@ Preferred vs. dispreferred responses created per contradiction.
 <!-- This relates heavily to the Technical Specifications. Content here should link to that section when it is relevant to the training procedure. -->
 
 Objective: Direct Preference Optimization (sigmoid-based loss).
+
 Adapters: LoRA.
+
 Frameworks: HuggingFace Transformers, PEFT.
 
 
