@@ -26,7 +26,7 @@
 ### Dataset Inspiration
 
 - **Repository:** [PersonaMem](https://github.com/bowen-upenn/PersonaMem)
-- **Paper [optional]:** [Know Me, Respond to Me: Benchmarking LLMs for Dynamic User Profiling and Personalized Responses at Scale](https://arxiv.org/abs/2504.14225)
+- **Paper:** [Know Me, Respond to Me: Benchmarking LLMs for Dynamic User Profiling and Personalized Responses at Scale](https://arxiv.org/abs/2504.14225)
 
 ## Uses
 
